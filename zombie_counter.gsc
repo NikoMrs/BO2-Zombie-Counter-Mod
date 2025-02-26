@@ -30,23 +30,29 @@ MonitorZombieCount(){
     self endon("disconnect");
     flag_wait("initial_blackscreen_passed" );
 
-    self.zombiecounter = createfontstring("hudsmall", 1.5);
+    self.zombiecounter = createFontString("hudsmall", 1.5);
     self.zombiecounter setPoint("TOP_LEFT", "TOP_LEFT", -20, 20);
     self.zombiecounter.alpha = 1;
     self.zombiecounter.hidewheninmenu = 1;
     self.zombiecounter.hidewhendead = 1;
 
+    round_total_zombies = 0;
+
     for(;;){
+
+        if((get_round_enemy_array().size + level.zombie_total) > round_total_zombies){
+            round_total_zombies = get_round_enemy_array().size + level.zombie_total;
+        }
+
         if(isdefined(self.afterlife) && self.afterlife){
             self.zombiecounter.label = &"^4Zombies: ";
             self.zombiecounter.alpha = 0.7;
+            self.zombiecounter setText((get_round_enemy_array().size + level.zombie_total) + " / " + round_total_zombies);
         } else {
             self.zombiecounter.label = &"Zombies: ^1";
             self.zombiecounter.alpha = 1;
+            self.zombiecounter setText((get_round_enemy_array().size + level.zombie_total) + " ^7/ ^1" + round_total_zombies);
         }
-
-        self.zombiecounter setvalue( get_round_enemy_array().size + level.zombie_total);
-
 
         wait 0.5;
     }
